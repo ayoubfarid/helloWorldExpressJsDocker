@@ -28,7 +28,7 @@ router.get('/getAll', async (req, res) => {
 })
 
 //Get by ID Method
-router.get('/getOne/:id', async(req, res) => {
+router.get('/getOne/:_id', async(req, res) => {
     try{
         const data = await Model.findById(req.params.id);
         res.json(data)
@@ -39,29 +39,24 @@ router.get('/getOne/:id', async(req, res) => {
 })
 
 //Update by ID Method
-router.patch('/update/:id', async(req, res) => {
+router.put('/update/:_id', async(req, res) => {
     try {
-        const id = req.params.id;
-        const updatedData = req.body;
-        const options = { new: true };
-
-        const result = await Model.findByIdAndUpdate(
-            id, updatedData, options
-        )
-
-        res.send(result)
+        
+        const updatedpost = await Model.updateOne({_id:req.params._id}, {$set: req.body});
+        res.status(200).json(updatedpost);
+    } catch (error) {
+        res.status(400).json({message: error.message});
     }
-    catch (error) {
-        res.status(400).json({ message: error.message })
-    }
+  
 })
 
 //Delete by ID Method
-router.delete('/delete/:id', async(req, res) => {
+router.delete('/delete/:_id', async(req, res) => {
     try {
-        const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id)
-        res.send(`Document with ${data.name} has been deleted..`)
+       
+       
+        const data = await Model.deleteOne({_id:req.params._id})
+        res.send(`Document with ${data.subject} has been deleted..`)
     }
     catch (error) {
         res.status(400).json({ message: error.message })
